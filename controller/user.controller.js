@@ -20,8 +20,8 @@ exports.register = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-  const { username, password } = req.body;
-  userService.login({ username, password }, (error, result) => {
+  const { email, username, password } = req.body;
+  userService.login({ email, username, password }, (error, result) => {
     if (error) {
       return next(error);
     }
@@ -31,5 +31,27 @@ exports.login = (req, res, next) => {
 /// after user login genrate  a token when we access this api
 ///the token is verified then genrate response Authorised user
 exports.userProfile = (req, res, next) => {
-  return res.status(200).json({ message: "Authorized User!" });
+  User.find({}).then((user) => {
+    res.status(200).send(user);
+  });
+  //return res.status(200).json({ message: "Authorized User!" });
+};
+
+exports.updateUser = (req, res, next) => {
+  const { password } = req.body;
+  const salt = bcrypt.genSaltSync(10);
+  req.body.password = bcrypt.hashSync(password, salt);
+  User.findOneAndUpdate({ _id: req.params.id }, req.body).then(function (user) {
+    User.findOne({ _id: req.params.id }).then(function (user) {
+      res.send(user);
+    });
+  });
+};
+
+exports.deleteUser = (req, res, next) => {
+  console.log(req.params.id);
+  User.findOneAndDelete({ _id: req.params.id }).then(function (user) {
+    res.send(user);
+  });
+  //return res.status(200).json({ message: "Authorized User!" });
 };

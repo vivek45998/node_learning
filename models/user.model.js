@@ -1,14 +1,27 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const uniqueValidator = require("mongoose-unique-validator");
+const validateEmail = function (email) {
+  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  return re.test(email);
+};
 
 const userSchema = new Schema({
+  fullName: { type: String },
   username: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    match: [
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      "Please fill a valid email address",
+    ],
+  },
   password: { type: String, required: true },
   date: { type: Date, default: Date.now() },
 });
-///mongo schema have few config option, pass to the constructor or to the set method 
+///mongo schema have few config option, pass to the constructor or to the set method
 /// the password,__v has which we have did not send back to the client
 userSchema.set("toJSON", {
   transform: (document, returnedObject) => {
