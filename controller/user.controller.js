@@ -34,7 +34,6 @@ exports.userProfile = (req, res, next) => {
   User.find({}).then((user) => {
     res.status(200).send(user);
   });
-  //return res.status(200).json({ message: "Authorized User!" });
 };
 
 exports.updateUser = (req, res, next) => {
@@ -53,5 +52,4 @@ exports.deleteUser = (req, res, next) => {
   User.findOneAndDelete({ _id: req.params.id }).then(function (user) {
     res.send(user);
   });
-  //return res.status(200).json({ message: "Authorized User!" });
 };
