@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const uniqueValidator = require("mongoose-unique-validator");
+const utilsConfig = require("../utils/utils.config");
 
 const userSchema = new Schema({
   fullName: { type: String },
@@ -9,10 +10,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      "Please fill a valid email address",
-    ],
+    match:utilsConfig.match,
   },
   password: { type: String },
   date: { type: Date, default: Date.now() },
@@ -28,7 +26,7 @@ userSchema.set("toJSON", {
   },
 });
 ///set here to unique validator for email which is not a duplicate.
-userSchema.plugin(uniqueValidator, { message: "Email already in use.." });
+userSchema.plugin(uniqueValidator, { message: utilsConfig.emailAlreadyInUse });
 //to retrive data from mongo query
-const User = mongoose.model("user", userSchema);
+const User = mongoose.model(utilsConfig.user, userSchema);
 module.exports = User;

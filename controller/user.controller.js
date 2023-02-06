@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/user.model");
 const userService = require("../services/users.services");
+const utilsConfig = require("../utils/utils.config");
 exports.register = (req, res, next) => {
   const { password } = req.body;
   const salt = bcrypt.genSaltSync(10);
@@ -13,7 +14,7 @@ exports.register = (req, res, next) => {
       return next(error);
     }
     return res.status(200).send({
-      message: "Success",
+      message: utilsConfig.success,
       data: result,
     });
   });
@@ -25,7 +26,7 @@ exports.login = (req, res, next) => {
     if (error) {
       return next(error);
     }
-    return res.status(200).send({ message: "Success", data: result });
+    return res.status(200).send({ message: "Success", userProfile: result });
   });
 };
 /// after user login genrate  a token when we access this api

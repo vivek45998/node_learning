@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
-
+const utilsConfig = require("../utils/utils.config");
 function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
+  const authHeader = req.headers[utilsConfig.authorization];
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return res.sendStatus(401);
-  jwt.verify(token, "vivek_secreteKey", (err, user) => {
+  jwt.verify(token, utilsConfig.secreteKeyTitle, (err, user) => {
     if (err) return res.sendStatus(403);
     req.user = user;
     next();
@@ -12,8 +12,8 @@ function authenticateToken(req, res, next) {
 }
 
 function generateAccessToken(username) {
-  return jwt.sign({ data: username }, "vivek_secreteKey", {
-    expiresIn: "2h",
+  return jwt.sign({ data: username }, utilsConfig.secreteKeyTitle, {
+    expiresIn: utilsConfig.expiresIn,
   });
 }
 

@@ -1,5 +1,7 @@
+const utilsConfig = require("../utils/utils.config");
+
 function errorHanler(err, req, res, next) {
-  if (typeof err === "string") {
+  if (typeof err === utilsConfig.errString) {
     return res.status(400).json({ message: err.message });
   }
   if (typeof err === "ValidationError") {
