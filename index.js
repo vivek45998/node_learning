@@ -4,26 +4,26 @@ var { unless } = require("express-unless");
 const dbConfig = require("./config/db.config");
 const middle = require("./middlewares/auth");
 const errors = require("./middlewares/errors");
+const utilsConfig = require("./utils/utils.config");
 
 const app = express();
 //if we want to use mongoose in diffrent position it must be seen as global mode
 //that's why set mongoose like this
 mongoose.Promise = global.Promise;
 
-
 mongoose
   .connect(dbConfig.db, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(
     () => {
-      console.log("data base connected");
+      console.log(utilsConfig.dbConnectionSuccess);
     },
     (error) => {
-      console.log("database can't be connected:" + error);
+      console.log(utilsConfig.dbConnectionFail + error);
     }
-);
-  
+  );
+
 //1)this authentcateToken is write inside of the auth file
-//with the help of unless it will just check the condition 
+//with the help of unless it will just check the condition
 //if user having a token or not the basis of user will redircet unautorized page
 
 middle.authenticateToken.unless = unless;
@@ -49,5 +49,5 @@ app.use("/users", require("./routes/users.routes"));
 app.use(errors.errorHanler);
 
 app.listen(process.env.port || 3001, function () {
-  console.log("server started");
+  console.log(utilsConfig.serverString);
 });

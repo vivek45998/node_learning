@@ -2,6 +2,7 @@ const User = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const auth = require("../middlewares/auth");
 const { response } = require("express");
+const utilsConfig = require("../utils/utils.config");
 
 async function login({ username, password }, callback) {
   const user = await User.findOne({ username });
@@ -10,16 +11,16 @@ async function login({ username, password }, callback) {
       const token = auth.generateAccessToken(username);
       return callback(null, { ...user.toJSON(), token });
     } else {
-      return callback({ message: "Invalid USername/PassWord" });
+      return callback({ message: utilsConfig.invalidUser });
     }
   } else {
-    return callback({ message: "Invalid USername/PassWord" });
+    return callback({ message: utilsConfig.invalidUser });
   }
 }
 
 async function register(data, callback) {
   if (data.username == undefined) {
-    return callback({ message: "Username required" });
+    return callback({ message:utilsConfig.userNameRequired});
   }
   const user = new User(data);
   user
@@ -31,4 +32,5 @@ async function register(data, callback) {
       return callback(error);
     });
 }
+
 module.exports = { login, register };
